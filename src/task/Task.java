@@ -1,13 +1,13 @@
 package task;
-
+import statusName.StatusName;
 public class Task {
 
     private int id;
     private String name;
     private String description;
-    private String status;
+    private StatusName status;
 
-    public Task(String name, String description, String status) {
+    public Task(String name, String description, StatusName status) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -38,7 +38,7 @@ public class Task {
         return description;
     }
 
-    public String getStatus() {
+    public StatusName getStatus() {
         return status;
     }
 
@@ -50,7 +50,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusName status) {
         this.status = status;
     }
 }
