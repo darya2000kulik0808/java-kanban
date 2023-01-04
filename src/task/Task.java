@@ -1,5 +1,7 @@
 package task;
+
 import statusName.StatusName;
+
 public class Task {
 
     private int id;
@@ -30,6 +32,7 @@ public class Task {
     public void setId(int id) {
         this.id = id;
     }
+
     public String getName() {
         return name;
     }

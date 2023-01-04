@@ -1,11 +1,9 @@
-import task.Task;
-import task.Epic;
-import task.Subtask;
-
 import managers.Managers;
 import managers.taskManager.TaskManager;
-
 import statusName.StatusName;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 
 import java.util.ArrayList;
 
@@ -24,30 +22,30 @@ public class Main {
         tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", StatusName.NEW));
         tasks.add(new Task("Задача номер 2", "Описание второй задачи", StatusName.NEW));
 
-        epics.add(new Epic("New Task.Epic 1", "Description of epic 1",StatusName.NEW, subtasksEpic1));
+        epics.add(new Epic("New Task.Epic 1", "Description of epic 1", StatusName.NEW, subtasksEpic1));
         epics.add(new Epic("New epic 2", "Description 2", StatusName.NEW, subtasksEpic2));
 
-        for(Task task: tasks) {
+        for (Task task : tasks) {
             taskManager.createTask(task);
         }
 
-        for(Epic epic: epics) {
+        for (Epic epic : epics) {
             taskManager.createEpic(epic);
         }
 
         subtasksEpic1.add(new Subtask("Подзадача один эпика один", "Описание подзадачи",
                 StatusName.NEW, epics.get(0).getId()));
         subtasksEpic1.add(new Subtask("Подзадача 2 эпика один", "Описание подзадачи 2",
-               StatusName.NEW, epics.get(0).getId()));
+                StatusName.NEW, epics.get(0).getId()));
 
         subtasksEpic2.add(new Subtask("Task.Subtask name 2.2", "Description 2.2",
                 StatusName.NEW, epics.get(1).getId()));
 
-        for (Subtask subtask: subtasksEpic1) {
+        for (Subtask subtask : subtasksEpic1) {
             taskManager.createSubtask(subtask);
         }
 
-        for (Subtask subtask: subtasksEpic2) {
+        for (Subtask subtask : subtasksEpic2) {
             taskManager.createSubtask(subtask);
         }
 

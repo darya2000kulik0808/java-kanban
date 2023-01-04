@@ -20,7 +20,7 @@ public class Epic extends Task {
         String result = "Task.Epic{" +
                 "subtaskInEpic=";
 
-        for (Subtask subtask: subtaskInEpics) {
+        for (Subtask subtask : subtaskInEpics) {
             result = result + subtask.toString();
         }
 
