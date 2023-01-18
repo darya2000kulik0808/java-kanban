@@ -54,7 +54,7 @@ public class Main {
         System.out.println(taskManager.getAllSubtasks());
 
         //Проверка сохранения и обновления истории
-        System.out.println("\n");
+        System.out.println("\nПроверка истории просмотров \n");
         taskManager.getTaskById(0);
         taskManager.getEpicById(2);
         taskManager.getSubtaskById(4);
@@ -73,7 +73,7 @@ public class Main {
         System.out.println(taskManager.getHistoryManager().getHistory());
 
         //Проверка обновления статусов эпиков с изменением статуов подзадач
-        System.out.println("\n");
+        System.out.println("\nПроверка обновления статусов эпиков с изменением статуов подзадач\n");
         subtasksEpic1.get(0).setStatus(StatusName.IN_PROGRESS);
         subtasksEpic1.get(1).setStatus(StatusName.DONE);
 
@@ -89,7 +89,7 @@ public class Main {
         System.out.println(taskManager.getAllSubtasks());
 
         //Проверка удаления одного эпика и подзадачи
-        System.out.println("\n");
+        System.out.println("\nПроверка обновления статусов эпиков с изменением статуов подзадач и историей\n");
         taskManager.deleteEpicById(3);
 
         subtasksEpic1.remove(0);
@@ -99,8 +99,10 @@ public class Main {
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getAllSubtasks());
 
+        System.out.println(taskManager.getHistoryManager().getHistory());
+
         //Проверка удаления из хэш-таблиц
-        System.out.println("\n");
+        System.out.println("\nПроверка удаления из хэш-таблиц и истории\n");
         taskManager.deleteAllEpics();
         taskManager.deleteAllTasks();
         taskManager.deleteAllSubtasks();
@@ -108,6 +110,6 @@ public class Main {
         System.out.println(taskManager.getAllTasks());
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getAllSubtasks());
-
+        System.out.println(taskManager.getHistoryManager().getHistory());
     }
 }

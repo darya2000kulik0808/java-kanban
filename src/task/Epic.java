@@ -18,7 +18,7 @@ public class Epic extends Task {
     @Override
     public String toString() {
         String result = "Task.Epic{" +
-                "subtaskInEpic=";
+                "id = " + getId() + ", subtaskInEpic=";
 
         for (Subtask subtask : subtaskInEpics) {
             result = result + subtask.toString();
