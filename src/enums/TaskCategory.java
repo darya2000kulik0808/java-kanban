@@ -1,4 +1,4 @@
-package taskCategory;
+package enums;
 
 public enum TaskCategory {
     TASK,

@@ -1,16 +1,14 @@
 package task;
 
-import statusName.StatusName;
-import taskCategory.TaskCategory;
-
-import java.util.ArrayList;
+import enums.TaskStatus;
+import enums.TaskCategory;
 
 public class Epic extends Task {
 
     private final TaskCategory taskCategory = TaskCategory.EPIC;
 
     public Epic(String name, String description,
-                StatusName status) {
+                TaskStatus status) {
 
         super(name, description, status);
     }

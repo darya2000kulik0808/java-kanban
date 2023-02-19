@@ -1,7 +1,7 @@
 package task;
 
-import statusName.StatusName;
-import taskCategory.TaskCategory;
+import enums.TaskStatus;
+import enums.TaskCategory;
 
 public class Task {
 
@@ -9,9 +9,9 @@ public class Task {
     private int id;
     private String name;
     private String description;
-    private StatusName status;
+    private TaskStatus status;
 
-    public Task(String name, String description, StatusName status) {
+    public Task(String name, String description, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -43,7 +43,7 @@ public class Task {
         return description;
     }
 
-    public StatusName getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
@@ -55,7 +55,7 @@ public class Task {
         this.description = description;
     }
 
-    public void setStatus(StatusName status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 

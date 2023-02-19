@@ -2,7 +2,7 @@ package managers.taskManager;
 
 import managers.Managers;
 import managers.historyManager.HistoryManager;
-import statusName.StatusName;
+import enums.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -194,26 +194,26 @@ public class InMemoryTaskManager implements TaskManager {
 
         if (!getAllSubtasksInOneEpic(epic.getId()).isEmpty()) {
             for (Subtask subtask : getAllSubtasksInOneEpic(epic.getId())) {
-                if (subtask.getStatus().equals(StatusName.IN_PROGRESS)) {
-                    epic.setStatus(StatusName.IN_PROGRESS);
+                if (subtask.getStatus().equals(TaskStatus.IN_PROGRESS)) {
+                    epic.setStatus(TaskStatus.IN_PROGRESS);
                 }
 
-                if (subtask.getStatus().equals(StatusName.NEW)) {
+                if (subtask.getStatus().equals(TaskStatus.NEW)) {
                     newSubtasks++;
                 }
 
-                if (subtask.getStatus().equals(StatusName.DONE)) {
+                if (subtask.getStatus().equals(TaskStatus.DONE)) {
                     doneSubtasks++;
                 }
             }
 
             if (newSubtasks == getAllSubtasksInOneEpic(epic.getId()).size()) {
-                epic.setStatus(StatusName.NEW);
+                epic.setStatus(TaskStatus.NEW);
             } else if (doneSubtasks == getAllSubtasksInOneEpic(epic.getId()).size()) {
-                epic.setStatus(StatusName.DONE);
+                epic.setStatus(TaskStatus.DONE);
             }
         } else {
-            epic.setStatus(StatusName.NEW);
+            epic.setStatus(TaskStatus.NEW);
         }
         epics.put(epic.getId(), epic);
     }

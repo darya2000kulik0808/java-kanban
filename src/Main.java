@@ -1,6 +1,6 @@
 import managers.Managers;
 import managers.taskManager.TaskManager;
-import statusName.StatusName;
+import enums.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -19,11 +19,11 @@ public class Main {
         ArrayList<Subtask> subtasksEpic2 = new ArrayList<>();
 
         //Проверка создания задач, эпиков и подзадач
-        tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", StatusName.NEW));
-        tasks.add(new Task("Задача номер 2", "Описание второй задачи", StatusName.NEW));
+        tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", TaskStatus.NEW));
+        tasks.add(new Task("Задача номер 2", "Описание второй задачи", TaskStatus.NEW));
 
-        epics.add(new Epic("New Task.Epic 1", "Description of epic 1", StatusName.NEW));
-        epics.add(new Epic("New epic 2", "Description 2", StatusName.NEW));
+        epics.add(new Epic("New Task.Epic 1", "Description of epic 1", TaskStatus.NEW));
+        epics.add(new Epic("New epic 2", "Description 2", TaskStatus.NEW));
 
         for (Task task : tasks) {
             taskManager.createTask(task);
@@ -34,12 +34,12 @@ public class Main {
         }
 
         subtasksEpic1.add(new Subtask("Подзадача один эпика один", "Описание подзадачи",
-                StatusName.NEW, epics.get(0).getId()));
+                TaskStatus.NEW, epics.get(0).getId()));
         subtasksEpic1.add(new Subtask("Подзадача 2 эпика один", "Описание подзадачи 2",
-                StatusName.NEW, epics.get(0).getId()));
+                TaskStatus.NEW, epics.get(0).getId()));
 
         subtasksEpic2.add(new Subtask("Task.Subtask name 2.2", "Description 2.2",
-                StatusName.NEW, epics.get(1).getId()));
+                TaskStatus.NEW, epics.get(1).getId()));
 
         for (Subtask subtask : subtasksEpic1) {
             taskManager.createSubtask(subtask);
@@ -74,10 +74,10 @@ public class Main {
 
         //Проверка обновления статусов эпиков с изменением статуов подзадач
         System.out.println("\nПроверка обновления статусов эпиков с изменением статуов подзадач\n");
-        subtasksEpic1.get(0).setStatus(StatusName.IN_PROGRESS);
-        subtasksEpic1.get(1).setStatus(StatusName.DONE);
+        subtasksEpic1.get(0).setStatus(TaskStatus.IN_PROGRESS);
+        subtasksEpic1.get(1).setStatus(TaskStatus.DONE);
 
-        subtasksEpic2.get(0).setStatus(StatusName.DONE);
+        subtasksEpic2.get(0).setStatus(TaskStatus.DONE);
 
         taskManager.updateSubtask(subtasksEpic1.get(0));
         taskManager.updateSubtask(subtasksEpic1.get(1));

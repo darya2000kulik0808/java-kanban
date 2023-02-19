@@ -1,13 +1,13 @@
 package task;
 
-import statusName.StatusName;
-import taskCategory.TaskCategory;
+import enums.TaskStatus;
+import enums.TaskCategory;
 
 public class Subtask extends Task {
     private int idEpic;
     private final TaskCategory taskCategory = TaskCategory.SUBTASK;
 
-    public Subtask(String name, String description, StatusName status, int idEpic) {
+    public Subtask(String name, String description, TaskStatus status, int idEpic) {
         super(name, description, status);
         this.idEpic = idEpic;
     }
