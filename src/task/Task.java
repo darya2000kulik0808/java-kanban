@@ -1,9 +1,11 @@
 package task;
 
 import statusName.StatusName;
+import taskCategory.TaskCategory;
 
 public class Task {
 
+    private final TaskCategory taskCategory = TaskCategory.TASK;
     private int id;
     private String name;
     private String description;
@@ -55,5 +57,9 @@ public class Task {
 
     public void setStatus(StatusName status) {
         this.status = status;
+    }
+
+    public TaskCategory getTaskCategory() {
+        return taskCategory;
     }
 }

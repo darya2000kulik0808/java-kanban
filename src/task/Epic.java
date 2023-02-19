@@ -1,30 +1,25 @@
 package task;
 
 import statusName.StatusName;
+import taskCategory.TaskCategory;
 
 import java.util.ArrayList;
 
 public class Epic extends Task {
 
-    private ArrayList<Subtask> subtaskInEpics;
+    private final TaskCategory taskCategory = TaskCategory.EPIC;
 
     public Epic(String name, String description,
-                StatusName status, ArrayList<Subtask> subtaskInEpic) {
+                StatusName status) {
 
         super(name, description, status);
-        this.subtaskInEpics = subtaskInEpic;
     }
 
     @Override
     public String toString() {
         String result = "Task.Epic{" +
-                "id = " + getId() + ", subtaskInEpic=";
-
-        for (Subtask subtask : subtaskInEpics) {
-            result = result + subtask.toString();
-        }
-
-        result = result + ", name='" + getName() + '\'' +
+                "id = " + getId() +
+                ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 '}' + "\n";
@@ -32,11 +27,7 @@ public class Epic extends Task {
         return result;
     }
 
-    public ArrayList<Subtask> getSubtaskInEpics() {
-        return subtaskInEpics;
-    }
-
-    public void setSubtaskInEpics(ArrayList<Subtask> subtaskInEpics) {
-        this.subtaskInEpics = subtaskInEpics;
+    public TaskCategory getTaskCategory() {
+        return taskCategory;
     }
 }

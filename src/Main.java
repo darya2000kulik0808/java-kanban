@@ -22,8 +22,8 @@ public class Main {
         tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", StatusName.NEW));
         tasks.add(new Task("Задача номер 2", "Описание второй задачи", StatusName.NEW));
 
-        epics.add(new Epic("New Task.Epic 1", "Description of epic 1", StatusName.NEW, subtasksEpic1));
-        epics.add(new Epic("New epic 2", "Description 2", StatusName.NEW, subtasksEpic2));
+        epics.add(new Epic("New Task.Epic 1", "Description of epic 1", StatusName.NEW));
+        epics.add(new Epic("New epic 2", "Description 2", StatusName.NEW));
 
         for (Task task : tasks) {
             taskManager.createTask(task);
@@ -82,8 +82,8 @@ public class Main {
         taskManager.updateSubtask(subtasksEpic1.get(0));
         taskManager.updateSubtask(subtasksEpic1.get(1));
 
-        taskManager.updateEpic(epics.get(0), subtasksEpic1);
-        taskManager.updateEpic(epics.get(1), subtasksEpic2);
+        taskManager.updateEpic(epics.get(0));
+        taskManager.updateEpic(epics.get(1));
 
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getAllSubtasks());
@@ -94,7 +94,7 @@ public class Main {
 
         subtasksEpic1.remove(0);
         taskManager.deleteSubtaskById(4);
-        taskManager.updateEpic(epics.get(0), subtasksEpic1);
+        taskManager.updateEpic(epics.get(0));
 
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getAllSubtasks());

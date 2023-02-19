@@ -48,5 +48,5 @@ public interface TaskManager {
 
     void updateSubtask(Subtask subtask);
 
-    void updateEpic(Epic epic, ArrayList<Subtask> subtaskInEpicArrayList);
+    void updateEpic(Epic epic);
 }
