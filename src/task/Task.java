@@ -3,6 +3,8 @@ package task;
 import enums.TaskStatus;
 import enums.TaskCategory;
 
+import java.time.LocalDateTime;
+
 public class Task {
 
     private final TaskCategory taskCategory = TaskCategory.TASK;
@@ -10,11 +12,21 @@ public class Task {
     private String name;
     private String description;
     private TaskStatus status;
+    private long duration;
+    private LocalDateTime startTime;
 
-    public Task(String name, String description, TaskStatus status) {
+    protected Task(String name, String description, TaskStatus status){
         this.name = name;
         this.description = description;
         this.status = status;
+    }
+
+    public Task(String name, String description, TaskStatus status, LocalDateTime startTime, long duration) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     @Override
@@ -24,6 +36,8 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
+                ", startTime='" + startTime + '\'' +
+                ", duration='" + duration + '\'' +
                 "}\n";
     }
 
@@ -61,5 +75,25 @@ public class Task {
 
     public TaskCategory getTaskCategory() {
         return taskCategory;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime(){
+        return startTime.plusMinutes(duration);
     }
 }

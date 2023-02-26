@@ -5,6 +5,7 @@ import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Main {
@@ -19,8 +20,10 @@ public class Main {
         ArrayList<Subtask> subtasksEpic2 = new ArrayList<>();
 
         //Проверка создания задач, эпиков и подзадач
-        tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", TaskStatus.NEW));
-        tasks.add(new Task("Задача номер 2", "Описание второй задачи", TaskStatus.NEW));
+        tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", TaskStatus.NEW,
+                LocalDateTime.parse("2023-02-26T00:00:01"), 80));
+        tasks.add(new Task("Задача номер 2", "Описание второй задачи", TaskStatus.NEW,
+                LocalDateTime.parse("2023-02-26T00:01:01"), 60));
 
         epics.add(new Epic("New Task.Epic 1", "Description of epic 1", TaskStatus.NEW));
         epics.add(new Epic("New epic 2", "Description 2", TaskStatus.NEW));
@@ -34,12 +37,12 @@ public class Main {
         }
 
         subtasksEpic1.add(new Subtask("Подзадача один эпика один", "Описание подзадачи",
-                TaskStatus.NEW, epics.get(0).getId()));
+                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:00:00"), 30, epics.get(0).getId()));
         subtasksEpic1.add(new Subtask("Подзадача 2 эпика один", "Описание подзадачи 2",
-                TaskStatus.NEW, epics.get(0).getId()));
+                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:10:00"), 10, epics.get(0).getId()));
 
         subtasksEpic2.add(new Subtask("Task.Subtask name 2.2", "Description 2.2",
-                TaskStatus.NEW, epics.get(1).getId()));
+                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:15:00"), 5, epics.get(1).getId()));
 
         for (Subtask subtask : subtasksEpic1) {
             taskManager.createSubtask(subtask);

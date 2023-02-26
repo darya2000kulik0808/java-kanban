@@ -3,8 +3,10 @@ package task;
 import enums.TaskStatus;
 import enums.TaskCategory;
 
-public class Epic extends Task {
+import java.time.LocalDateTime;
 
+public class Epic extends Task {
+    private LocalDateTime endTime;
     private final TaskCategory taskCategory = TaskCategory.EPIC;
 
     public Epic(String name, String description,
@@ -20,6 +22,9 @@ public class Epic extends Task {
                 ", name='" + getName() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
+                ", startTime='" + getStartTime() + '\'' +
+                ", duration='" + getDuration() + '\'' +
+                ", endTime='" + getEndTime() + '\'' +
                 '}' + "\n";
 
         return result;
@@ -27,5 +32,14 @@ public class Epic extends Task {
 
     public TaskCategory getTaskCategory() {
         return taskCategory;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 }
