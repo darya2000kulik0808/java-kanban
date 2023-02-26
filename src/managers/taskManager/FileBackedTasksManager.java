@@ -1,5 +1,6 @@
 package managers.taskManager;
 
+import exceptions.ManagerLoadException;
 import exceptions.ManagerSaveException;
 import managers.historyManager.HistoryManager;
 import enums.TaskStatus;
@@ -103,9 +104,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
     }
 
     public static FileBackedTasksManager loadFromFile(File file){
-        FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file.getName()))){
-
+            FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
             ArrayList<String> list = new ArrayList<>();
 
             while(fileReader.ready()){
@@ -120,9 +120,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
                 list.remove(list.size()-1); //Удаление истории из списка
             }
 
-
             list.remove(list.size()-1); //удаление пустой строки
-
 
             for(String string: list){
                 if(fileBackedTasksManager.fromString(string) instanceof Subtask){
@@ -155,9 +153,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
             }
             return fileBackedTasksManager;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw  new ManagerLoadException("Не удалось считать файл!");
         }
-        return fileBackedTasksManager;
     }
 
     public void checkHashMapId(Task task){
@@ -171,15 +168,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager{
         try (Writer fileWriter = new FileWriter("saveFile.csv")){
             fileWriter.write("id,type,name,status,description,startTime,duration,epic\n");
 
-            for(Task task: super.getAllTasks().values()){
+            for(Task task: this.getAllTasks().values()){
                 fileWriter.write(toString(task) + "\n");
             }
 
-            for(Epic epic: super.getAllEpics().values()){
+            for(Epic epic: this.getAllEpics().values()){
                 fileWriter.write(toString(epic) + "\n");
             }
 
-            for(Subtask subtask: super.getAllSubtasks().values()){
+            for(Subtask subtask: this.getAllSubtasks().values()){
                 fileWriter.write(toString(subtask) + "\n");
             }
 

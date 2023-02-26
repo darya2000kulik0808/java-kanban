@@ -1,9 +1,10 @@
 import enums.TaskStatus;
+import exceptions.ManagerLoadException;
+import exceptions.ManagerSaveException;
 import managers.taskManager.FileBackedTasksManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
 
 import java.io.File;
 
@@ -119,5 +120,30 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
 
         assertTrue(fileBackedTasksManagerLoaded.getAllTasks().isEmpty());
         assertTrue(fileBackedTasksManagerLoaded.getHistoryManager().getHistory().isEmpty());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenWrongFile(){
+        final ManagerLoadException e = assertThrows(
+                ManagerLoadException.class,
+                () -> FileBackedTasksManager.loadFromFile(
+                        new File("C:\\Users\\Lenovo\\IdeaProjects\\java-kanban\\save.csv"))
+        );
+
+        assertEquals("Не удалось считать файл!", e.getMessage());
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenTryingToSaveFile(){
+        File file = new File("C:\\Users\\Lenovo\\IdeaProjects\\java-kanban\\saveFile.csv");
+        file.setReadOnly();
+
+        final ManagerSaveException e = assertThrows(
+                ManagerSaveException.class,
+                () -> fileBackedTasksManagerForTest.save()
+        );
+
+        assertEquals("Не удалось сделать запись в файл!", e.getMessage());
+        file.setWritable(true);
     }
 }
