@@ -1,22 +1,23 @@
-import static org.junit.jupiter.api.Assertions.assertEquals;
+package task;
+
+import enums.TaskStatus;
+import managers.taskManager.InMemoryTaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import enums.TaskStatus;
-import task.Epic;
-import task.Subtask;
-import managers.taskManager.InMemoryTaskManager;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EpicTests {
 
     private Epic epicForTest;
     private ArrayList<Subtask> subtasksForEpic;
     private InMemoryTaskManager inMemoryTaskManagerForTest;
+
     public void createSubtasksForEpic(TaskStatus status1, TaskStatus status2,
-                                      TaskStatus status3, TaskStatus status4, int  idEpic){
+                                      TaskStatus status3, TaskStatus status4, int idEpic) {
         subtasksForEpic = new ArrayList<>();
         subtasksForEpic.add(new Subtask("TestSubtaskName1", "TestSubtaskDescription1", status1,
                 LocalDateTime.parse("2023-02-26T14:30:00"), 10, idEpic));
@@ -25,10 +26,11 @@ public class EpicTests {
         subtasksForEpic.add(new Subtask("TestSubtaskName3", "TestSubtaskDescription3", status3,
                 LocalDateTime.parse("2023-02-26T15:01:00"), 15, idEpic));
         subtasksForEpic.add(new Subtask("TestSubtaskName4", "TestSubtaskDescription4", status4,
-                LocalDateTime.parse("2023-02-26T15:16:00"), 5,idEpic));
+                LocalDateTime.parse("2023-02-26T15:16:00"), 5, idEpic));
     }
+
     @BeforeEach
-    public void beforeEach(){
+    public void beforeEach() {
         inMemoryTaskManagerForTest = new InMemoryTaskManager();
         epicForTest = new Epic("TestEpicName", "TestEpicDescription",
                 TaskStatus.NEW);
@@ -36,16 +38,16 @@ public class EpicTests {
     }
 
     @Test
-    public void shouldReturnTaskStatusNewWhenNoSubtasks(){
+    public void shouldReturnTaskStatusNewWhenNoSubtasks() {
         assertEquals(TaskStatus.NEW, inMemoryTaskManagerForTest.getEpicById(epicForTest.getId()).getStatus(),
                 "Статус эпика не NEW");
     }
 
     @Test
-    public void shouldReturnTaskStatusNewWhenAllSubtasksAreNew(){
+    public void shouldReturnTaskStatusNewWhenAllSubtasksAreNew() {
         createSubtasksForEpic(TaskStatus.NEW, TaskStatus.NEW, TaskStatus.NEW, TaskStatus.NEW, epicForTest.getId());
 
-        for(Subtask subtask: subtasksForEpic){
+        for (Subtask subtask : subtasksForEpic) {
             inMemoryTaskManagerForTest.createSubtask(subtask);
         }
 
@@ -55,10 +57,10 @@ public class EpicTests {
     }
 
     @Test
-    public void shouldReturnTaskStatusDoneWhenAllSubtasksAreDone(){
+    public void shouldReturnTaskStatusDoneWhenAllSubtasksAreDone() {
         createSubtasksForEpic(TaskStatus.DONE, TaskStatus.DONE, TaskStatus.DONE, TaskStatus.DONE, epicForTest.getId());
 
-        for(Subtask subtask: subtasksForEpic){
+        for (Subtask subtask : subtasksForEpic) {
             inMemoryTaskManagerForTest.createSubtask(subtask);
         }
 
@@ -68,10 +70,10 @@ public class EpicTests {
     }
 
     @Test
-    public void shouldReturnTaskStatusInProgressWhenSubtasksAreBothDoneAndNew(){
+    public void shouldReturnTaskStatusInProgressWhenSubtasksAreBothDoneAndNew() {
         createSubtasksForEpic(TaskStatus.NEW, TaskStatus.NEW, TaskStatus.DONE, TaskStatus.DONE, epicForTest.getId());
 
-        for(Subtask subtask: subtasksForEpic){
+        for (Subtask subtask : subtasksForEpic) {
             inMemoryTaskManagerForTest.createSubtask(subtask);
         }
 
@@ -81,11 +83,11 @@ public class EpicTests {
     }
 
     @Test
-    public void shouldReturnTaskStatusInProgressWhenAllSubtasksAreInProgress(){
+    public void shouldReturnTaskStatusInProgressWhenAllSubtasksAreInProgress() {
         createSubtasksForEpic(TaskStatus.IN_PROGRESS, TaskStatus.IN_PROGRESS,
-                              TaskStatus.IN_PROGRESS, TaskStatus.IN_PROGRESS, epicForTest.getId());
+                TaskStatus.IN_PROGRESS, TaskStatus.IN_PROGRESS, epicForTest.getId());
 
-        for(Subtask subtask: subtasksForEpic){
+        for (Subtask subtask : subtasksForEpic) {
             inMemoryTaskManagerForTest.createSubtask(subtask);
         }
 
@@ -95,11 +97,11 @@ public class EpicTests {
     }
 
     @Test
-    public void shouldReturnTaskStatusInProgressWhenAllSubtasksHaveMixedStatuses(){
+    public void shouldReturnTaskStatusInProgressWhenAllSubtasksHaveMixedStatuses() {
         createSubtasksForEpic(TaskStatus.IN_PROGRESS, TaskStatus.DONE,
                 TaskStatus.NEW, TaskStatus.IN_PROGRESS, epicForTest.getId());
 
-        for(Subtask subtask: subtasksForEpic){
+        for (Subtask subtask : subtasksForEpic) {
             inMemoryTaskManagerForTest.createSubtask(subtask);
         }
 
@@ -109,13 +111,13 @@ public class EpicTests {
     }
 
     @Test
-    public void shouldReturnRightTimeAndDuration(){
+    public void shouldReturnRightTimeAndDuration() {
         createSubtasksForEpic(TaskStatus.IN_PROGRESS, TaskStatus.DONE,
                 TaskStatus.NEW, TaskStatus.IN_PROGRESS, epicForTest.getId());
 
         long allDuration = 0;
 
-        for(Subtask subtask: subtasksForEpic){
+        for (Subtask subtask : subtasksForEpic) {
             inMemoryTaskManagerForTest.createSubtask(subtask);
             allDuration = allDuration + subtask.getDuration();
         }
