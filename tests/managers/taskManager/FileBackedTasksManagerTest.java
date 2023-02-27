@@ -11,7 +11,8 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager>{
+class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager> {
+
     final private String PATH_TO_FILE = "saveFile.csv";
 
     @BeforeEach
@@ -19,40 +20,8 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
         taskManager = new FileBackedTasksManager();
     }
 
-    public void normalTaskHashMap(){
-        super.returnHashMaps();
-    }
-
-    public void emptyTaskHashMap(){
-        super.returnEmptyHashMaps();
-    }
-
-    public void creatingTaskEpicSubtask(){
-        super.createTaskEpicSubtask();
-    }
-
-    public void makeHashMapsEmpty(){
-        super.emptyHashMaps();
-    }
-
-    public void deletingById(){
-        super.deleteById();
-    }
-
-    public void gettingById(){
-        super.getById();
-    }
-
-    public void updatingTasksEpicsSubtasks(){
-        super.updateTasksSubtasksEpics();
-    }
-
-    public void gettingAllSubtasksForOneEpic() {
-        super.getAllSubtasksForOneEpicByIf();
-    }
-
     @Test
-    public void savingAndLoadingToFileWithEmptyHistory(){
+    public void savingAndLoadingToFileWithEmptyHistory() {
         createTasksEpicsSubtasksForManager();
         tasksForTest.get(0).setStatus(TaskStatus.IN_PROGRESS);
         tasksForTest.get(1).setName("Meow");
@@ -73,7 +42,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
     }
 
     @Test
-    public void savingAndLoadingToFileWithEpicWithNoSubtasks(){
+    public void savingAndLoadingToFileWithEpicWithNoSubtasks() {
         createTasksEpicsSubtasksForManager();
         tasksForTest.get(0).setStatus(TaskStatus.IN_PROGRESS);
         tasksForTest.get(1).setName("Meow");
@@ -95,7 +64,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
     }
 
     @Test
-    public void savingAndLoadingToFileWithEmptyTasks(){
+    public void savingAndLoadingToFileWithEmptyTasks() {
         createTasksEpicsSubtasksForManager();
         taskManager.deleteAllTasks();
         taskManager.updateEpic(epicsForTest.get(0));
@@ -109,7 +78,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
     }
 
     @Test
-    public void shouldThrowExceptionWhenWrongFile(){
+    public void shouldThrowExceptionWhenWrongFile() {
         String pathname = "save.csv";
         Executable executable = () -> {
             FileBackedTasksManager.loadFromFile(
@@ -125,7 +94,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
     }
 
     @Test
-    public void shouldThrowExceptionWhenTryingToSaveFile(){
+    public void shouldThrowExceptionWhenTryingToSaveFile() {
         File file = new File(PATH_TO_FILE);
         file.setReadOnly();
 

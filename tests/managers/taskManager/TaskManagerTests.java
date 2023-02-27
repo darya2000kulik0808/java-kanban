@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTests<T extends TaskManager> {
+
     ArrayList<Task> tasksForTest;
     ArrayList<Subtask> subtasksForTest;
     ArrayList<Epic> epicsForTest;
