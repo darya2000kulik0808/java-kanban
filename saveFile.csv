@@ -1,24 +1,7 @@
 id,type,name,status,description,startTime,duration,epic
-0,TASK,name1,IN_PROGRESS,description1,2023-02-26T14:30,10
-1,TASK,Meow,NEW,description2,2023-02-26T14:41,20
-2,TASK,name3,NEW,description3,2023-02-26T15:01,25
-11,TASK,name1,NEW,description1,2023-02-26T14:30,10
-12,TASK,name2,NEW,description2,2023-02-26T14:41,20
-13,TASK,name3,NEW,description3,2023-02-26T15:01,25
-16,EPIC,epicName3,NEW,epicDescription3,2023-02-26T16:16,10
-3,EPIC,epicName1,IN_PROGRESS,epicDescription1,2023-02-26T15:26,10
-4,EPIC,epicName2,NEW,epicDescription2,2023-02-26T15:36,40
-5,EPIC,epicName3,NEW,epicDescription3,2023-02-26T16:16,10
-14,EPIC,epicName1,NEW,epicDescription1,2023-02-26T15:26,10
-15,EPIC,epicName2,NEW,epicDescription2,2023-02-26T15:36,40
-17,SUBTASK,subtaskName1,NEW,subtaskDescription1,2023-02-26T15:26,5,14
-18,SUBTASK,subtaskName2,NEW,subtaskDescription2,2023-02-26T15:31,5,14
-19,SUBTASK,subtaskName3,NEW,subtaskDescription3,2023-02-26T15:36,25,15
-20,SUBTASK,subtaskName4,NEW,subtaskDescription4,2023-02-26T16:01,15,15
-21,SUBTASK,subtaskName5,NEW,subtaskDescription5,2023-02-26T16:16,10,16
-6,SUBTASK,subtaskName1,IN_PROGRESS,subtaskDescription1,2023-02-26T15:26,5,3
-7,SUBTASK,subtaskName2,DONE,subtaskDescription2,2023-02-26T15:31,5,3
-8,SUBTASK,subtaskName3,NEW,subtaskDescription3,2023-02-26T15:36,25,4
-9,SUBTASK,subtaskName4,NEW,subtaskDescription4,2023-02-26T16:01,15,4
-10,SUBTASK,subtaskName5,NEW,subtaskDescription5,2023-02-26T16:16,10,5
+0,TASK,Моя первая задача,NEW,Описание задачи номер 1,2023-02-26T00:00:01,80
+1,TASK,Задача номер 2,NEW,Описание второй задачи,2023-02-27T00:01:01,60
+2,EPIC,New Task.Epic 1,DONE,Description of epic 1,2023-03-01T14:10,10
+5,SUBTASK,Подзадача 2 эпика один,DONE,Описание подзадачи 2,2023-03-01T14:10,10,2
 
+2,0,5,1

@@ -5,9 +5,7 @@ import enums.TaskStatus;
 import exceptions.ManagerLoadException;
 import exceptions.ManagerSaveException;
 import managers.historyManager.HistoryManager;
-import task.Epic;
-import task.Subtask;
-import task.Task;
+import task.*;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -17,95 +15,19 @@ import java.util.List;
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
     final private String PATH_TO_FILE = "saveFile.csv";
-
-    public static void main(String[] args) {
-
-        FileBackedTasksManager fileBackedTasksManager1 = new FileBackedTasksManager();
-
-        ArrayList<Task> tasks = new ArrayList<>();
-        ArrayList<Epic> epics = new ArrayList<>();
-        ArrayList<Subtask> subtasksEpic1 = new ArrayList<>();
-        ArrayList<Subtask> subtasksEpic2 = new ArrayList<>();
-
-        //Проверка создания задач, эпиков и подзадач
-        tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", TaskStatus.NEW,
-                LocalDateTime.parse("2023-02-26T00:00:01"), 80));
-        tasks.add(new Task("Задача номер 2", "Описание второй задачи", TaskStatus.NEW,
-                LocalDateTime.parse("2023-02-26T00:01:01"), 60));
-
-        epics.add(new Epic("New Task.Epic 1", "Description of epic 1", TaskStatus.NEW));
-        epics.add(new Epic("New epic 2", "Description 2", TaskStatus.NEW));
-
-
-        for (Task task : tasks) {
-            fileBackedTasksManager1.createTask(task);
-        }
-
-        for (Epic epic : epics) {
-            fileBackedTasksManager1.createEpic(epic);
-        }
-
-        subtasksEpic1.add(new Subtask("Подзадача один эпика один", "Описание подзадачи",
-                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:00:00"), 30, epics.get(0).getId()));
-        subtasksEpic1.add(new Subtask("Подзадача 2 эпика один", "Описание подзадачи 2",
-                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:10:00"), 10, epics.get(0).getId()));
-
-        subtasksEpic2.add(new Subtask("Task.Subtask name 2.2", "Description 2.2",
-                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:15:00"), 5, epics.get(1).getId()));
-
-        for (Subtask subtask : subtasksEpic1) {
-            fileBackedTasksManager1.createSubtask(subtask);
-        }
-
-        for (Subtask subtask : subtasksEpic2) {
-            fileBackedTasksManager1.createSubtask(subtask);
-        }
-
-        fileBackedTasksManager1.getTaskById(0);
-        fileBackedTasksManager1.getEpicById(2);
-        fileBackedTasksManager1.getSubtaskById(4);
-        fileBackedTasksManager1.getTaskById(1);
-        fileBackedTasksManager1.getEpicById(2);
-        fileBackedTasksManager1.getEpicById(3);
-        fileBackedTasksManager1.getTaskById(0);
-        fileBackedTasksManager1.getSubtaskById(5);
-        fileBackedTasksManager1.getSubtaskById(6);
-        fileBackedTasksManager1.getTaskById(1);
-
-        subtasksEpic1.get(0).setStatus(TaskStatus.IN_PROGRESS);
-        subtasksEpic1.get(1).setStatus(TaskStatus.DONE);
-
-        subtasksEpic2.get(0).setStatus(TaskStatus.DONE);
-
-        fileBackedTasksManager1.updateSubtask(subtasksEpic1.get(0));
-        fileBackedTasksManager1.updateSubtask(subtasksEpic1.get(1));
-
-        fileBackedTasksManager1.updateEpic(epics.get(0));
-        fileBackedTasksManager1.updateEpic(epics.get(1));
-
-
-        System.out.println(fileBackedTasksManager1.getAllTasks());
-        System.out.println(fileBackedTasksManager1.getAllEpics());
-        System.out.println(fileBackedTasksManager1.getAllSubtasks());
-        System.out.println(fileBackedTasksManager1.getHistoryManager().getHistory());
-
-        System.out.println("\n");
-
-        FileBackedTasksManager fileBackedTasksManager =
-                FileBackedTasksManager.loadFromFile(
-                        new File("java-kanban\\resources\\saveFile.csv"));
-
-        System.out.println(fileBackedTasksManager.getAllTasks());
-        System.out.println(fileBackedTasksManager.getAllEpics());
-        System.out.println(fileBackedTasksManager.getAllSubtasks());
-        System.out.println(fileBackedTasksManager.getHistoryManager().getHistory());
-    }
+    public static String path;
 
     public FileBackedTasksManager() {
         super();
     }
 
-    public static FileBackedTasksManager loadFromFile(File file) {
+    public FileBackedTasksManager(String path) {
+        super();
+        this.path = path;
+    }
+
+    public static FileBackedTasksManager loadFromFile() {
+        File file = new File(path);
         try (BufferedReader fileReader = new BufferedReader(new FileReader(file.getName()))) {
             FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager();
             ArrayList<String> list = new ArrayList<>();
@@ -160,8 +82,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public void checkHashMapId(Task task) {
-        if ((this.getHashMapId() == 0) && (task.getId() > this.getHashMapId())) {
-            this.setHashMapId(task.getId());
+        if ((getHashMapId() == 0) && (task.getId() > getHashMapId())) {
+            setHashMapId(task.getId());
         }
     }
 

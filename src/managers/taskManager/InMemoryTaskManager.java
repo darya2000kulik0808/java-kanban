@@ -121,7 +121,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createTask(Task task) {
-        if(!validateTasksByTime(task)){
+        if(!isIntersectionByTime(task)){
             task.setId(hashMapId);
             tasks.put(hashMapId, task);
             hashMapId++;
@@ -130,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubtask(Subtask subtask) {
-        if(!validateTasksByTime(subtask)){
+        if(!isIntersectionByTime(subtask)){
             subtask.setId(hashMapId);
             subtasks.put(hashMapId, subtask);
             hashMapId++;
@@ -233,7 +233,7 @@ public class InMemoryTaskManager implements TaskManager {
         return  tasksSortedByStartTime;
     }
 
-    public boolean validateTasksByTime(Task task){
+    public boolean isIntersectionByTime(Task task){
         boolean isIntersection = false;
 
         if(!(tasks.isEmpty() && subtasks.isEmpty())){
@@ -241,8 +241,9 @@ public class InMemoryTaskManager implements TaskManager {
 
             Task task1 = getPrioritizedTasks().first();
             while (iterator.hasNext()){
-                if(task.getStartTime().isAfter(task1.getStartTime())
-                        && task.getStartTime().isBefore(task1.getEndTime())){
+                if((task.getStartTime().isAfter(task1.getStartTime())
+                        && task.getStartTime().isBefore(task1.getEndTime())) ||
+                (task.getStartTime().equals(task1.getStartTime()))){
                     isIntersection = true;
                     break;
                 }

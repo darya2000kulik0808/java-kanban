@@ -7,13 +7,17 @@ import java.time.LocalDateTime;
 
 public class Task {
 
-    private final TaskCategory taskCategory = TaskCategory.TASK;
+
+    private TaskCategory taskCategory;
     private int id;
     private String name;
     private String description;
     private TaskStatus status;
     private long duration;
     private LocalDateTime startTime;
+
+
+    private LocalDateTime endTime;
 
     protected Task(String name, String description, TaskStatus status){
         this.name = name;
@@ -27,6 +31,8 @@ public class Task {
         this.status = status;
         this.startTime = startTime;
         this.duration = duration;
+        taskCategory = TaskCategory.TASK;
+        endTime = startTime.plusMinutes(duration);
     }
 
     @Override
@@ -37,6 +43,7 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", startTime='" + startTime + '\'' +
+                ", endTime='" + getEndTime() + '\'' +
                 ", duration='" + duration + '\'' +
                 "}\n";
     }
@@ -89,11 +96,20 @@ public class Task {
         return startTime;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
+    public LocalDateTime getEndTime(){
+
+        return endTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime){
         this.startTime = startTime;
     }
 
-    public LocalDateTime getEndTime(){
-        return startTime.plusMinutes(duration);
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setTaskCategory(TaskCategory taskCategory) {
+        this.taskCategory = taskCategory;
     }
 }

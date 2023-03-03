@@ -1,19 +1,25 @@
+import kvClient.KVTaskClient;
+import kvServer.KVServer;
 import managers.Managers;
+import managers.taskManager.HttpTaskManager;
 import managers.taskManager.TaskManager;
 import enums.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        KVServer kvServer = new KVServer();
+        kvServer.start();
 
         TaskManager taskManager = Managers.getDefault();
-
         ArrayList<Task> tasks = new ArrayList<>();
         ArrayList<Epic> epics = new ArrayList<>();
         ArrayList<Subtask> subtasksEpic1 = new ArrayList<>();
@@ -23,7 +29,7 @@ public class Main {
         tasks.add(new Task("Моя первая задача", "Описание задачи номер 1", TaskStatus.NEW,
                 LocalDateTime.parse("2023-02-26T00:00:01"), 80));
         tasks.add(new Task("Задача номер 2", "Описание второй задачи", TaskStatus.NEW,
-                LocalDateTime.parse("2023-02-26T00:01:01"), 60));
+                LocalDateTime.parse("2023-02-27T00:01:01"), 60));
 
         epics.add(new Epic("New Task.Epic 1", "Description of epic 1", TaskStatus.NEW));
         epics.add(new Epic("New epic 2", "Description 2", TaskStatus.NEW));
@@ -37,12 +43,12 @@ public class Main {
         }
 
         subtasksEpic1.add(new Subtask("Подзадача один эпика один", "Описание подзадачи",
-                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:00:00"), 30, epics.get(0).getId()));
+                TaskStatus.NEW, LocalDateTime.parse("2023-02-28T14:00:00"), 30, epics.get(0).getId()));
         subtasksEpic1.add(new Subtask("Подзадача 2 эпика один", "Описание подзадачи 2",
-                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:10:00"), 10, epics.get(0).getId()));
+                TaskStatus.NEW, LocalDateTime.parse("2023-03-02T14:10:00"), 10, epics.get(0).getId()));
 
         subtasksEpic2.add(new Subtask("Task.Subtask name 2.2", "Description 2.2",
-                TaskStatus.NEW, LocalDateTime.parse("2023-02-26T14:15:00"), 5, epics.get(1).getId()));
+                TaskStatus.NEW, LocalDateTime.parse("2023-03-03T14:15:00"), 5, epics.get(1).getId()));
 
         for (Subtask subtask : subtasksEpic1) {
             taskManager.createSubtask(subtask);
@@ -114,5 +120,17 @@ public class Main {
         System.out.println(taskManager.getAllEpics());
         System.out.println(taskManager.getAllSubtasks());
         System.out.println(taskManager.getHistoryManager().getHistory());
+
+        System.out.println("\n");
+
+        HttpTaskManager httpTaskManager =
+                new HttpTaskManager("http://localhost:8078").loadFromServer("http://localhost:8078");
+
+        System.out.println(httpTaskManager.getAllTasks());
+        System.out.println(httpTaskManager.getAllEpics());
+        System.out.println(httpTaskManager.getAllSubtasks());
+        System.out.println(httpTaskManager.getHistoryManager().getHistory());
+
+        kvServer.stop(0);
     }
 }

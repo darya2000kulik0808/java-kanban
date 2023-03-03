@@ -6,12 +6,12 @@ import enums.TaskCategory;
 import java.time.LocalDateTime;
 
 public class Subtask extends Task {
-    private int idEpic;
-    private final TaskCategory taskCategory = TaskCategory.SUBTASK;
+    private final int idEpic;
 
     public Subtask(String name, String description, TaskStatus status, LocalDateTime startTime, long duration, int idEpic) {
         super(name, description, status, startTime,  duration);
         this.idEpic = idEpic;
+        setTaskCategory(TaskCategory.SUBTASK);
     }
 
     @Override
@@ -23,15 +23,12 @@ public class Subtask extends Task {
                 ", description='" + getDescription() + '\'' +
                 ", status='" + getStatus() + '\'' +
                 ", startTime='" + getStartTime() + '\'' +
+                ", endTime='" + getEndTime() + '\'' +
                 ", duration='" + getDuration() + '\'' +
                 '}' + "\n";
     }
 
     public int getIdEpic() {
         return idEpic;
-    }
-
-    public TaskCategory getTaskCategory() {
-        return taskCategory;
     }
 }

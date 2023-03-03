@@ -17,7 +17,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
 
     @BeforeEach
     public void beforeEach() {
-        taskManager = new FileBackedTasksManager();
+        taskManager = new FileBackedTasksManager(PATH_TO_FILE);
     }
 
     @Test
@@ -34,8 +34,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
         taskManager.updateEpic(epicsForTest.get(0));
 
         FileBackedTasksManager fileBackedTasksManagerLoaded =
-                FileBackedTasksManager.loadFromFile(
-                        new File(PATH_TO_FILE));
+                FileBackedTasksManager.loadFromFile();
 
         returnHashMaps();
         assertTrue(fileBackedTasksManagerLoaded.getHistoryManager().getHistory().isEmpty());
@@ -56,8 +55,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
         taskManager.updateEpic(epicsForTest.get(0));
 
         FileBackedTasksManager fileBackedTasksManagerLoaded =
-                FileBackedTasksManager.loadFromFile(
-                        new File(PATH_TO_FILE));
+                FileBackedTasksManager.loadFromFile();
 
         assertTrue(fileBackedTasksManagerLoaded.getAllSubtasksInOneEpic(3).isEmpty());
         assertFalse(fileBackedTasksManagerLoaded.getHistoryManager().getHistory().isEmpty());
@@ -70,8 +68,7 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
         taskManager.updateEpic(epicsForTest.get(0));
 
         FileBackedTasksManager fileBackedTasksManagerLoaded =
-                FileBackedTasksManager.loadFromFile(
-                        new File(PATH_TO_FILE));
+                FileBackedTasksManager.loadFromFile();
 
         assertTrue(fileBackedTasksManagerLoaded.getAllTasks().isEmpty());
         assertTrue(fileBackedTasksManagerLoaded.getHistoryManager().getHistory().isEmpty());
@@ -79,10 +76,10 @@ class FileBackedTasksManagerTest extends TaskManagerTests<FileBackedTasksManager
 
     @Test
     public void shouldThrowExceptionWhenWrongFile() {
-        String pathname = "save.csv";
+        taskManager.path = "save.csv";
+
         Executable executable = () -> {
-            FileBackedTasksManager.loadFromFile(
-                    new File(pathname));
+            FileBackedTasksManager.loadFromFile();
         };
 
         final ManagerLoadException e = assertThrows(
