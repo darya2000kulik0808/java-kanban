@@ -1,8 +1,8 @@
 package managers.taskManager;
 
+import enums.TaskStatus;
 import managers.Managers;
 import managers.historyManager.HistoryManager;
-import enums.TaskStatus;
 import task.Epic;
 import task.Subtask;
 import task.Task;
@@ -75,15 +75,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTasks() {
-        for(Integer idTask: tasks.keySet()){
-              historyManager.remove(idTask);
+        for (Integer idTask : tasks.keySet()) {
+            historyManager.remove(idTask);
         }
         tasks.clear();
     }
 
     @Override
     public void deleteAllSubtasks() {
-        for(Integer idTSubtask: subtasks.keySet()){
+        for (Integer idTSubtask : subtasks.keySet()) {
             historyManager.remove(idTSubtask);
         }
         subtasks.clear();
@@ -92,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteAllEpics() {
         deleteAllSubtasks();
-        for(Integer idEpic: epics.keySet()){
+        for (Integer idEpic : epics.keySet()) {
             historyManager.remove(idEpic);
         }
         epics.clear();
@@ -115,13 +115,13 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.remove(idEpic);
         epics.remove(idEpic);
         for (Subtask subtask : getAllSubtasksInOneEpic(idEpic)) {
-                deleteSubtaskById(subtask.getId());
+            deleteSubtaskById(subtask.getId());
         }
     }
 
     @Override
     public void createTask(Task task) {
-        if(!isIntersectionByTime(task)){
+        if (!isIntersectionByTime(task)) {
             task.setId(hashMapId);
             tasks.put(hashMapId, task);
             hashMapId++;
@@ -130,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubtask(Subtask subtask) {
-        if(!isIntersectionByTime(subtask)){
+        if (!isIntersectionByTime(subtask)) {
             subtask.setId(hashMapId);
             subtasks.put(hashMapId, subtask);
             hashMapId++;
@@ -140,17 +140,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createEpic(Epic epic) {
-            epic.setId(hashMapId);
-            epics.put(hashMapId, epic);
-            hashMapId++;
+        epic.setId(hashMapId);
+        epics.put(hashMapId, epic);
+        hashMapId++;
     }
 
     @Override
     public ArrayList<Subtask> getAllSubtasksInOneEpic(int idEpic) {
         ArrayList<Subtask> subtasksForEpic = new ArrayList<>();
 
-        for(Subtask subtask: subtasks.values()){
-            if(subtask.getIdEpic() == idEpic){
+        for (Subtask subtask : subtasks.values()) {
+            if (subtask.getIdEpic() == idEpic) {
                 subtasksForEpic.add(subtask);
             }
         }
@@ -198,17 +198,17 @@ public class InMemoryTaskManager implements TaskManager {
         epics.put(epic.getId(), epic);
     }
 
-    public void makeStartEndTimeAndDurationForEpic(Epic epic){
+    public void makeStartEndTimeAndDurationForEpic(Epic epic) {
         long durationForEpic = 0;
         LocalDateTime statTimeForEarliestSubtask = LocalDateTime.MAX;
         LocalDateTime endTimeForLatestSubtask = LocalDateTime.MIN;
 
-        for (Subtask subtask: getAllSubtasksInOneEpic(epic.getId())){
-            if(subtask.getStartTime().isBefore(statTimeForEarliestSubtask)){
+        for (Subtask subtask : getAllSubtasksInOneEpic(epic.getId())) {
+            if (subtask.getStartTime().isBefore(statTimeForEarliestSubtask)) {
                 statTimeForEarliestSubtask = subtask.getStartTime();
             }
 
-            if(subtask.getEndTime().isAfter(endTimeForLatestSubtask)){
+            if (subtask.getEndTime().isAfter(endTimeForLatestSubtask)) {
                 endTimeForLatestSubtask = subtask.getEndTime();
             }
 
@@ -220,30 +220,30 @@ public class InMemoryTaskManager implements TaskManager {
         epic.setEndTime(endTimeForLatestSubtask);
     }
 
-    public TreeSet<Task> getPrioritizedTasks(){
+    public TreeSet<Task> getPrioritizedTasks() {
         TreeSet<Task> tasksSortedByStartTime = new TreeSet<>(Comparator.comparing(Task::getStartTime));
 
-        if(!tasks.isEmpty()){
+        if (!tasks.isEmpty()) {
             tasksSortedByStartTime.addAll(tasks.values());
         }
-        if(!subtasks.isEmpty()) {
+        if (!subtasks.isEmpty()) {
             tasksSortedByStartTime.addAll(subtasks.values());
         }
 
-        return  tasksSortedByStartTime;
+        return tasksSortedByStartTime;
     }
 
-    public boolean isIntersectionByTime(Task task){
+    public boolean isIntersectionByTime(Task task) {
         boolean isIntersection = false;
 
-        if(!(tasks.isEmpty() && subtasks.isEmpty())){
+        if (!(tasks.isEmpty() && subtasks.isEmpty())) {
             Iterator<Task> iterator = getPrioritizedTasks().iterator();
 
             Task task1 = getPrioritizedTasks().first();
-            while (iterator.hasNext()){
-                if((task.getStartTime().isAfter(task1.getStartTime())
+            while (iterator.hasNext()) {
+                if ((task.getStartTime().isAfter(task1.getStartTime())
                         && task.getStartTime().isBefore(task1.getEndTime())) ||
-                (task.getStartTime().equals(task1.getStartTime()))){
+                        (task.getStartTime().equals(task1.getStartTime()))) {
                     isIntersection = true;
                     break;
                 }

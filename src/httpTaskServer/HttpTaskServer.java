@@ -6,7 +6,9 @@ import com.sun.net.httpserver.HttpServer;
 import enums.TaskStatus;
 import forGson.GsonGetter;
 import managers.taskManager.FileBackedTasksManager;
-import task.*;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +17,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 public class HttpTaskServer {
 
@@ -26,7 +27,7 @@ public class HttpTaskServer {
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
     HttpServer httpServer;
 
-    public HttpTaskServer() throws IOException{
+    public HttpTaskServer() throws IOException {
         httpServer = HttpServer.create();
 
         httpServer.bind(new InetSocketAddress(PORT), 0);
@@ -42,73 +43,88 @@ public class HttpTaskServer {
         System.out.println("HTTP-сервер запущен! Порт: " + PORT);
     }
 
-    private void handleTasksOperations(HttpExchange exchange) throws IOException{
+    private void handleTasksOperations(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         Optional<String> query = Optional.ofNullable(exchange.getRequestURI().getQuery());
 
-        switch (method){
+        switch (method) {
             case "GET":
-                if(query.isPresent() && (Pattern.matches("^id=\\d+$", query.get()))){
+                if (query.isPresent() && (query.get().startsWith("id"))) {
+                    System.out.println("GET tasks/task?id={id}");
                     handleGetTaskById(exchange);
                 } else {
+                    System.out.println("GET tasks/task");
                     handleGetTasks(exchange);
                 }
                 return;
             case "POST":
+                System.out.println("POST tasks/task");
                 handlePostTask(exchange);
                 return;
             case "DELETE":
-                if(query.isPresent() && (Pattern.matches("^id=\\d+$", query.get()))){
+                if (query.isPresent() && (query.get().startsWith("id"))) {
+                    System.out.println("DELETE tasks/task?id={id}");
                     handleDeleteTaskById(exchange);
                 } else {
+                    System.out.println("DELETE tasks/task");
                     handleDeleteTasks(exchange);
                 }
         }
     }
 
-    private void handleSubtasksOperations(HttpExchange exchange) throws IOException{
+    private void handleSubtasksOperations(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         Optional<String> query = Optional.ofNullable(exchange.getRequestURI().getQuery());
 
-        switch (method){
+        switch (method) {
             case "GET":
-                if(query.isPresent() && (Pattern.matches("^id=\\d+$", query.get()))){
+                if (query.isPresent() && (query.get().startsWith("id"))) {
+                    System.out.println("GET tasks/subtask?id={id}");
                     handleGetSubtaskById(exchange);
                 } else {
+                    System.out.println("GET tasks/subtask");
                     handleGetSubtasks(exchange);
                 }
                 return;
             case "POST":
+                System.out.println("POST tasks/subtask");
                 handlePostSubtask(exchange);
                 return;
             case "DELETE":
-                if(query.isPresent() && (Pattern.matches("^id=\\d+$", query.get()))){
+                if (query.isPresent() && (query.get().startsWith("id"))) {
+                    System.out.println("DELETE tasks/subtask?id={id}");
                     handleDeleteSubtaskById(exchange);
                 } else {
+                    System.out.println("DELETE tasks/subtask");
                     handleDeleteSubtasks(exchange);
                 }
         }
     }
 
-    private void handleEpicsOperations(HttpExchange exchange) throws IOException{
+    private void handleEpicsOperations(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         Optional<String> query = Optional.ofNullable(exchange.getRequestURI().getQuery());
 
-        switch (method){
+        switch (method) {
             case "GET":
-                if(query.isPresent() && (Pattern.matches("^id=\\d+$", query.get()))){
+                if (query.isPresent() && (query.get().startsWith("id"))) {
+                    System.out.println("GET tasks/epic?id={id}");
                     handleGetEpicById(exchange);
                 } else {
+                    System.out.println("GET tasks/epic");
                     handleGetEpics(exchange);
                 }
                 return;
             case "POST":
+                System.out.println("POST tasks/epic");
                 handlePostEpic(exchange);
                 return;
             case "DELETE":
-                if(query.isPresent() && (Pattern.matches("^id=\\d+$", query.get()))){
+                if (query.isPresent() && (query.get().startsWith("id"))) {
+                    System.out.println("DELETE tasks/epic?id={id}");
                     handleDeleteEpicById(exchange);
                 } else {
+                    System.out.println("DELETE tasks/epic");
                     handleDeleteEpics(exchange);
                 }
         }
@@ -119,18 +135,23 @@ public class HttpTaskServer {
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
 
-            for (Integer id : httpTaskManager.getAllEpics().keySet()) {
-                if (taskId == id) {
-                    httpTaskManager.deleteEpicById(id);
-                    response.writeResponse(exchange,
-                            "Супер-задача с индетификатором " + taskId + " успешно удалена!",
-                            200);
-                    return;
+            if (!httpTaskManager.getAllEpics().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllEpics().keySet()) {
+                    if (taskId == id) {
+                        httpTaskManager.deleteEpicById(id);
+                        response.writeResponse(exchange,
+                                "Супер-задача с индетификатором " + taskId + " успешно удалена!",
+                                200);
+                        return;
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Супер-задача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Супер-задача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список супер-задач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор супер-задачи!",
@@ -143,18 +164,23 @@ public class HttpTaskServer {
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
 
-            for (Integer id : httpTaskManager.getAllSubtasks().keySet()) {
-                if (taskId == id) {
-                    httpTaskManager.deleteSubtaskById(id);
-                    response.writeResponse(exchange,
-                            "Подзадача с индетификатором " + taskId + " успешно удалена!",
-                            200);
-                    return;
+            if (!httpTaskManager.getAllSubtasks().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllSubtasks().keySet()) {
+                    if (taskId == id) {
+                        httpTaskManager.deleteSubtaskById(id);
+                        response.writeResponse(exchange,
+                                "Подзадача с индетификатором " + taskId + " успешно удалена!",
+                                200);
+                        return;
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Подзадача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Подзадача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список подзадач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор подзадачи!",
@@ -167,18 +193,23 @@ public class HttpTaskServer {
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
 
-            for (Integer id : httpTaskManager.getAllTasks().keySet()) {
-                if (taskId == id) {
-                    httpTaskManager.deleteTaskById(id);
-                    response.writeResponse(exchange,
-                            "Задача с индетификатором " + taskId + " успешно удалена!",
-                            200);
-                    return;
+            if (!httpTaskManager.getAllTasks().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllTasks().keySet()) {
+                    if (taskId == id) {
+                        httpTaskManager.deleteTaskById(id);
+                        response.writeResponse(exchange,
+                                "Задача с индетификатором " + taskId + " успешно удалена!",
+                                200);
+                        return;
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Задача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Задача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список задач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор задачи!",
@@ -190,7 +221,7 @@ public class HttpTaskServer {
         if (httpTaskManager.getAllEpics().isEmpty()) {
             response.writeResponse(exchange,
                     "Невозможно удалить список супер-задач, так как пока нет никаких супер-задач!",
-                    204);//no content
+                    404);//no content
         } else {
             httpTaskManager.deleteAllEpics();
             response.writeResponse(exchange,
@@ -203,7 +234,7 @@ public class HttpTaskServer {
         if (httpTaskManager.getAllSubtasks().isEmpty()) {
             response.writeResponse(exchange,
                     "Невозможно удалить список подзадач, так как пока нет никаких подзадач!",
-                    204);//no content
+                    404);//no content
         } else {
             httpTaskManager.deleteAllSubtasks();
             response.writeResponse(exchange,
@@ -216,7 +247,7 @@ public class HttpTaskServer {
         if (httpTaskManager.getAllTasks().isEmpty()) {
             response.writeResponse(exchange,
                     "Невозможно удалить список задач, так как пока нет никаких задач!",
-                    204);//no content
+                    404);//no content
         } else {
             httpTaskManager.deleteAllTasks();
             response.writeResponse(exchange,
@@ -248,21 +279,21 @@ public class HttpTaskServer {
                         "Описание супер-задачи не может быть пустым.",
                         400);
             } else {
-                if (!httpTaskManager.getAllEpics().isEmpty()) {
-                    for (Integer id : httpTaskManager.getAllEpics().keySet()) {
-                        if (epic.getId() == id) {
-                            httpTaskManager.updateEpic(epic);
-                            response.writeResponse(exchange,
-                                    "Супер-задача успешно обновлена!",
-                                    201);
-                            return;
-                        }
+                for (Integer id : httpTaskManager.getAllEpics().keySet()) {
+                    if (epic.getId() == id) {
+
+                        httpTaskManager.updateEpic(epic);
+                        response.writeResponse(exchange,
+                                "Супер-задача успешно обновлена!",
+                                201);
+                        return;
                     }
                 }
                 httpTaskManager.createEpic(epic);
                 response.writeResponse(exchange,
                         "Супер-задача успешно добавлена!",
                         201);
+
             }
         } catch (JsonSyntaxException exception) {
             response.writeResponse(exchange, "Получен некорректный JSON", 400);
@@ -397,22 +428,33 @@ public class HttpTaskServer {
     }
 
     private void handleGetAllSubtasksForEpic(HttpExchange exchange) throws IOException {
+        System.out.println("GET tasks/subtask/epic?id={id}");
         Optional<Integer> idOptional = getId(exchange);
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
 
-            for (Integer id : httpTaskManager.getAllEpics().keySet()) {
-                if (taskId == id) {
-                    String subtasksForEpic = gson.toJson(httpTaskManager.getAllSubtasksInOneEpic(id));
-                    response.writeResponse(exchange,
-                            subtasksForEpic,
-                            200);
-                    return;
+            if (!httpTaskManager.getAllEpics().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllEpics().keySet()) {
+                    if (taskId == id) {
+                        if (!httpTaskManager.getAllSubtasksInOneEpic(id).isEmpty()) {
+                            String subtasksForEpic = gson.toJson(httpTaskManager.getAllSubtasksInOneEpic(id));
+                            response.writeResponse(exchange,
+                                    subtasksForEpic,
+                                    200);
+                            return;
+                        }
+                        response.writeResponse(exchange,
+                                "Для супер-задачи с индетификатором " + taskId + " не найдены под задачи!",
+                                404);
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Супер-задача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Супер-задача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список супер-задач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор супер-задачи!",
@@ -425,18 +467,23 @@ public class HttpTaskServer {
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
 
-            for (Integer id : httpTaskManager.getAllEpics().keySet()) {
-                if (taskId == id) {
-                    String epic = gson.toJson(httpTaskManager.getEpicById(id));
-                    response.writeResponse(exchange,
-                            epic,
-                            200);
-                    return;
+            if (!httpTaskManager.getAllEpics().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllEpics().keySet()) {
+                    if (taskId == id) {
+                        String epic = gson.toJson(httpTaskManager.getEpicById(id));
+                        response.writeResponse(exchange,
+                                epic,
+                                200);
+                        return;
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Супер-задача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Супер-задача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список супер-задач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор супер-задачи!",
@@ -449,18 +496,23 @@ public class HttpTaskServer {
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
 
-            for (Integer id : httpTaskManager.getAllSubtasks().keySet()) {
-                if (taskId == id) {
-                    String subtask = gson.toJson(httpTaskManager.getSubtaskById(id));
-                    response.writeResponse(exchange,
-                            subtask,
-                            200);
-                    return;
+            if (!httpTaskManager.getAllSubtasks().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllSubtasks().keySet()) {
+                    if (taskId == id) {
+                        String subtask = gson.toJson(httpTaskManager.getSubtaskById(id));
+                        response.writeResponse(exchange,
+                                subtask,
+                                200);
+                        return;
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Подзадача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Подзадача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список подзадач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор подзадачи!",
@@ -472,19 +524,23 @@ public class HttpTaskServer {
         Optional<Integer> idOptional = getId(exchange);
         if (idOptional.isPresent()) {
             int taskId = idOptional.get();
-
-            for (Integer id : httpTaskManager.getAllTasks().keySet()) {
-                if (taskId == id) {
-                    String task = gson.toJson(httpTaskManager.getTaskById(id));
-                    response.writeResponse(exchange,
-                            task,
-                            200);
-                    return;
+            if (!httpTaskManager.getAllTasks().isEmpty()) {
+                for (Integer id : httpTaskManager.getAllTasks().keySet()) {
+                    if (taskId == id) {
+                        String task = gson.toJson(httpTaskManager.getTaskById(id));
+                        response.writeResponse(exchange,
+                                task,
+                                200);
+                        return;
+                    }
                 }
+                response.writeResponse(exchange,
+                        "Задача с индетификатором " + taskId + " не найдена!",
+                        404);
             }
             response.writeResponse(exchange,
-                    "Задача с индетификатором " + taskId + " не найдена!",
-                    404);
+                    "Список задач пуст!",
+                    400);
         } else {
             response.writeResponse(exchange,
                     "Неверный идентфикатор задачи!",
@@ -493,6 +549,7 @@ public class HttpTaskServer {
     }
 
     private void handleGetPrioritizedTasks(HttpExchange exchange) throws IOException {
+        System.out.println("GET tasks");
         if (httpTaskManager.getPrioritizedTasks().isEmpty()) {
             response.writeResponse(exchange,
                     "Невозможно получить задачи по времени начала, так как этот список пока пуст!",
@@ -505,6 +562,7 @@ public class HttpTaskServer {
     }
 
     private void handleGetHistory(HttpExchange exchange) throws IOException {
+        System.out.println("GET tasks/history");
         if (httpTaskManager.getHistoryManager().getHistory().isEmpty()) {
             response.writeResponse(exchange,
                     "Невозможно получить историю просмотра, так как история пока пуста!",
@@ -562,5 +620,10 @@ public class HttpTaskServer {
         } catch (NumberFormatException exception) {
             return Optional.empty();
         }
+    }
+
+    public void stop(int delay) {
+        System.out.println("Завершаем работу сервера!");
+        httpServer.stop(0);
     }
 }

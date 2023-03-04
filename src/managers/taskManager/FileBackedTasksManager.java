@@ -2,10 +2,12 @@ package managers.taskManager;
 
 import enums.TaskCategory;
 import enums.TaskStatus;
-import exceptions.ManagerLoadException;
-import exceptions.ManagerSaveException;
+import exceptions.managerExceptions.ManagerLoadException;
+import exceptions.managerExceptions.ManagerSaveException;
 import managers.historyManager.HistoryManager;
-import task.*;
+import task.Epic;
+import task.Subtask;
+import task.Task;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -14,7 +16,6 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
 
-    final private String PATH_TO_FILE = "saveFile.csv";
     public static String path;
 
     public FileBackedTasksManager() {
@@ -23,7 +24,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public FileBackedTasksManager(String path) {
         super();
-        this.path = path;
+        FileBackedTasksManager.path = path;
     }
 
     public static FileBackedTasksManager loadFromFile() {
@@ -89,7 +90,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
 
     public void save() {
-        try (Writer fileWriter = new FileWriter(PATH_TO_FILE)) {
+        String pathToFile = "saveFile.csv";
+        try (Writer fileWriter = new FileWriter(pathToFile)) {
             fileWriter.write("id,type,name,status,description,startTime,duration,epic\n");
 
             for (Task task : this.getAllTasks().values()) {

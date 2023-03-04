@@ -13,24 +13,19 @@ import java.util.HashMap;
 
 public class HttpTaskManager extends FileBackedTasksManager {
 
-    private KVTaskClient kvTaskClient;
+    private final KVTaskClient kvTaskClient;
 
     public HttpTaskManager(String path) {
-        super();
         kvTaskClient = new KVTaskClient(path);
-    }
-
-    public KVTaskClient getKvTaskClient() {
-        return kvTaskClient;
     }
 
     public HttpTaskManager loadFromServer(String path) {
         HttpTaskManager httpTaskManager = new HttpTaskManager(path);
 
-        String tasks = httpTaskManager.getKvTaskClient().load("tasks");
-        String subtasks = httpTaskManager.getKvTaskClient().load("subtasks");
-        String epics = httpTaskManager.getKvTaskClient().load("epics");
-        String history = httpTaskManager.getKvTaskClient().load("history");
+        String tasks = kvTaskClient.load("tasks");
+        String subtasks = kvTaskClient.load("subtasks");
+        String epics = kvTaskClient.load("epics");
+        String history = kvTaskClient.load("history");
 
         if (!tasks.isEmpty()) {
             Type tasksMapTypes = new TypeToken<HashMap<Integer, Task>>() {

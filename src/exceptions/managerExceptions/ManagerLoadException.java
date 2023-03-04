@@ -1,4 +1,4 @@
-package exceptions;
+package exceptions.managerExceptions;
 
 public class ManagerLoadException extends RuntimeException {
     public ManagerLoadException(String message) {

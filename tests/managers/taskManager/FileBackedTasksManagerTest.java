@@ -1,8 +1,8 @@
 package managers.taskManager;
 
 import enums.TaskStatus;
-import exceptions.ManagerLoadException;
-import exceptions.ManagerSaveException;
+import exceptions.managerExceptions.ManagerLoadException;
+import exceptions.managerExceptions.ManagerSaveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
